@@ -24,9 +24,9 @@ export default {
 <style scoped>
 .task-box {
   border: 1px solid #e4e4e7;
-  padding: 16px 20px;
+  padding: 20px 16px;
   border-radius: 4px;
-  width: 282px;
+  width: 320px;
   color: #868f9c;
   font-weight: normal;
   display: flex;
@@ -35,6 +35,7 @@ export default {
   cursor: pointer;
   box-shadow: 0.5px 2px 14px 0px #e4e4e4;
   transition: 0.2s;
+  box-sizing: border-box;
 }
 
 .task-box:hover {
@@ -49,7 +50,4 @@ export default {
   margin: 0;
 }
 
-.options {
-
-}
 </style>
