@@ -1,8 +1,8 @@
 <template>
   <div class="task-box" draggable="true" @dragstart="dragStart" @dragend="dragEnd">
-    <p class="task">{{task}}</p>
+    <p class="task" :data-task-list="list">{{task}}</p>
     <div class="options">
-      <img src="../assets/more.svg" alt="more" width="16" draggable="false">
+      <img src="../assets/more.svg" alt="more" width="16" draggable="false" :data-task-list="list">
     </div>
   </div>
 </template>
