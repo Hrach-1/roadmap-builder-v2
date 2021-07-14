@@ -1,31 +1,30 @@
 <template>
-  <div class="add-task" >
-      <textarea id="add-task-first" v-model="task" ref="task"></textarea>
+  <div class="add-task">
+    <textarea id="add-task-first" v-model="task" ref="task"></textarea>
 
-      <button type="button" @click="addTask">Add Task</button>
+    <button type="button" @click="addTask">Add Task</button>
   </div>
 </template>
 
 <script>
 export default {
-  name: "AddTask",
+  name: 'AddTask',
   props: ['tasksList', 'list'],
   data: () => ({
-    task: ''
+    task: '',
   }),
   methods: {
     addTask(e) {
       if (this.task) this.tasksList.push(this.task)
       this.task = ''
       this.$emit('hide', this.list)
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped>
-
-.add-task{
+.add-task {
   overflow: auto;
 }
 

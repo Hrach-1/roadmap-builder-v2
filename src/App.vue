@@ -1,23 +1,38 @@
 <template>
   <div class="roadmap" ref="roadmap">
-    <TaskList title="Planned" :now-drag="nowDrag" :tasks="tasks" :first-list="true" :task-list="0"/>
-    <TaskList title="Under consideration" :now-drag="nowDrag" :tasks="tasks" :task-list="1"/>
-    <TaskList title="Already Shipped" :now-drag="nowDrag" :tasks="tasks" :task-list="2"/>
+    <TaskList
+      title="Planned"
+      :now-drag="nowDrag"
+      :tasks="tasks"
+      :first-list="true"
+      :task-list="0"
+    />
+    <TaskList
+      title="Under consideration"
+      :now-drag="nowDrag"
+      :tasks="tasks"
+      :task-list="1"
+    />
+    <TaskList
+      title="Already Shipped"
+      :now-drag="nowDrag"
+      :tasks="tasks"
+      :task-list="2"
+    />
   </div>
 </template>
 
 <script>
-
-import Task from "@/components/Task";
-import TaskList from "@/components/TaskList";
-import AddTask from "@/components/AddTask";
+import Task from '@/components/Task'
+import TaskList from '@/components/TaskList'
+import AddTask from '@/components/AddTask'
 
 export default {
   name: 'App',
   components: {
     AddTask,
     TaskList,
-    Task
+    Task,
   },
   data: () => ({
     tasks: [
@@ -26,12 +41,12 @@ export default {
         'Instagram stories',
         'Image optimization, minify JS/CSS/HTML',
         'Facebook groups source',
-        'Shopify App'
+        'Shopify App',
       ],
       [
         'Web hooks for article deletion',
         'Facebook Groups Source',
-        'Shopify App'
+        'Shopify App',
       ],
       [
         'Small resolution images',
@@ -39,9 +54,10 @@ export default {
         'Image optimization, minify JS/CSS/HTML',
         'Turn disconnection emails off fortnite',
         'Instagram @mention source',
-        'More detailed help videos'
-      ]],
-    nowDrag: {}
+        'More detailed help videos',
+      ],
+    ],
+    nowDrag: {},
   }),
 }
 </script>

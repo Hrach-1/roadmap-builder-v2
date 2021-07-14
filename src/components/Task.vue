@@ -1,37 +1,44 @@
 <template>
-  <div class="task-box" draggable="true" @dragstart="dragStart" @dragend="dragEnd">
-    <p class="task" :data-task-list="list">{{task}}</p>
+  <div
+    class="task-box"
+    draggable="true"
+    @dragstart="dragStart"
+    @dragend="dragEnd"
+  >
+    <p class="task" :data-task-list="list">{{ task }}</p>
     <div class="options">
-      <img src="../assets/more.svg" alt="more" width="16" draggable="false" :data-task-list="list">
+      <img
+        src="../assets/more.svg"
+        alt="more"
+        width="16"
+        draggable="false"
+        :data-task-list="list"
+      />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Task",
-  data: () => ({
-  }),
+  name: 'Task',
+  data: () => ({}),
   props: {
     task: {
       require: true,
       type: String,
     },
     list: Number,
-    idx: Number
+    idx: Number,
   },
   methods: {
     dragStart(e) {
-      console.log('Drag start')
-      // e.dataTransfer.setData('text/plain', null)
       e.target.style.opacity = 0.4
       this.$emit('dragItem', this.list, this.idx)
     },
     dragEnd(e) {
-      console.log('Drag End')
       e.target.style.opacity = 1
     },
-  }
+  },
 }
 </script>
 
@@ -74,6 +81,4 @@ export default {
   text-overflow: ellipsis;
   margin: 0;
 }
-
-
 </style>
