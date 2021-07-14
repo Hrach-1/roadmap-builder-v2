@@ -1,8 +1,8 @@
 <template>
-  <div class="task-box">
+  <div class="task-box" draggable="true" @dragstart="dragStart" @dragend="dragEnd">
     <p class="task">{{task}}</p>
     <div class="options">
-      <img src="../assets/more.svg" alt="more" width="16">
+      <img src="../assets/more.svg" alt="more" width="16" draggable="false">
     </div>
   </div>
 </template>
@@ -16,8 +16,22 @@ export default {
     task: {
       require: true,
       type: String,
-    }
+    },
+    list: Number,
+    idx: Number
   },
+  methods: {
+    dragStart(e) {
+      console.log('Drag start')
+      // e.dataTransfer.setData('text/plain', null)
+      e.target.style.opacity = 0.4
+      this.$emit('dragItem', this.list, this.idx)
+    },
+    dragEnd(e) {
+      console.log('Drag End')
+      e.target.style.opacity = 1
+    },
+  }
 }
 </script>
 
@@ -36,10 +50,21 @@ export default {
   box-shadow: 0.5px 2px 14px 0px #e4e4e4;
   transition: 0.2s;
   box-sizing: border-box;
+  margin-top: 24px;
+  background: #ffffff;
 }
 
 .task-box:hover {
   box-shadow: 1px 8px 14px 0px #e4e4e4;
+}
+
+.task-box:hover .options {
+  opacity: 1;
+}
+
+.task-box .options {
+  transition: 0.2s;
+  opacity: 0;
 }
 
 .task {
@@ -49,5 +74,6 @@ export default {
   text-overflow: ellipsis;
   margin: 0;
 }
+
 
 </style>
