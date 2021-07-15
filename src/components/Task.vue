@@ -30,10 +30,12 @@ export default {
     list: Number,
     idx: Number,
   },
+  inject: ['nowDrag'],
   methods: {
     dragStart(e) {
       e.target.style.opacity = 0.4
-      this.$emit('dragItem', this.list, this.idx)
+      this.nowDrag.list = this.list
+      this.nowDrag.idx = this.idx
     },
     dragEnd(e) {
       e.target.style.opacity = 1

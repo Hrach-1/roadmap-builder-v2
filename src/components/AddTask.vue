@@ -1,6 +1,6 @@
 <template>
-  <div class="add-task">
-    <textarea id="add-task-first" v-model="task" ref="task"></textarea>
+  <div class="add-task" @keypress.enter="addTask">
+    <textarea v-model="task" ref="task"></textarea>
 
     <button type="button" @click="addTask">Add Task</button>
   </div>
@@ -9,7 +9,7 @@
 <script>
 export default {
   name: 'AddTask',
-  props: ['tasksList', 'list'],
+  props: ['tasksList', 'list', 'addTaskState'],
   data: () => ({
     task: '',
   }),
@@ -18,6 +18,9 @@ export default {
       if (this.task) this.tasksList.push(this.task)
       this.task = ''
       this.$emit('hide', this.list)
+    },
+    focus() {
+      setTimeout(() => this.$refs.task.focus(), 10)
     },
   },
 }
@@ -31,7 +34,7 @@ export default {
 .add-task textarea {
   font-size: 18px;
   width: 320px;
-  height: 60px;
+  height: 100px;
   border: 1px solid #e4e4e7;
   border-radius: 4px;
   color: #868f9c;
@@ -44,6 +47,7 @@ export default {
   transition: 0.2s;
   box-sizing: border-box;
   resize: none;
+  padding: 20px 16px;
 }
 
 .add-task textarea:focus {

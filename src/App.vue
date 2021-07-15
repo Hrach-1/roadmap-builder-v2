@@ -1,23 +1,13 @@
+<!-- :now-drag="nowDrag" -->
+
 <template>
   <div class="roadmap" ref="roadmap">
     <TaskList
-      title="Planned"
-      :now-drag="nowDrag"
+      v-for="(title, idx) in taskListTitles"
+      :key="idx"
+      :title="title"
+      :task-list="idx"
       :tasks="tasks"
-      :first-list="true"
-      :task-list="0"
-    />
-    <TaskList
-      title="Under consideration"
-      :now-drag="nowDrag"
-      :tasks="tasks"
-      :task-list="1"
-    />
-    <TaskList
-      title="Already Shipped"
-      :now-drag="nowDrag"
-      :tasks="tasks"
-      :task-list="2"
     />
   </div>
 </template>
@@ -35,6 +25,7 @@ export default {
     Task,
   },
   data: () => ({
+    taskListTitles: ['Planned', 'Under consideration', 'Already Shipped'],
     tasks: [
       [
         'Faster refresh rate on event plan',
@@ -57,8 +48,10 @@ export default {
         'More detailed help videos',
       ],
     ],
-    nowDrag: {},
   }),
+  provide: {
+    nowDrag: {},
+  },
 }
 </script>
 

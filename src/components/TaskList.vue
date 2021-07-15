@@ -7,7 +7,11 @@
       </button>
     </div>
 
-    <div class="tasks" @dragenter.prevent="dragEnterTaskList">
+    <div
+      class="tasks"
+      @dragenter.prevent="dragEnterTaskList"
+      :data-task-list="taskList"
+    >
       <div
         class="dropzone"
         :data-task-list="taskList"
@@ -16,19 +20,19 @@
         @dragleave="dragLeaveTaskList"
       ></div>
       <AddTask
-        v-if="addTaskState"
+        v-show="addTaskState"
         :tasksList="tasks[taskList]"
         @hide="toggleAddTaskState"
         :list="taskList"
         :data-task-list="taskList"
+        ref="addTask"
       />
       <Task
         v-for="(task, idx) in tasks[taskList]"
-        :key="task"
+        :key="idx"
         :task="task"
         :list="taskList"
         :idx="idx"
-        @dragItem="dragItem"
         :data-task-list="taskList"
       />
     </div>
@@ -45,14 +49,11 @@ export default {
   data: () => ({
     addTaskState: false,
   }),
+  inject: ['nowDrag'],
   props: {
     title: {
       required: true,
       type: String,
-    },
-    nowDrag: {
-      type: Object,
-      required: true,
     },
     tasks: {
       type: Array,
@@ -70,15 +71,10 @@ export default {
   methods: {
     toggleAddTaskState() {
       this.addTaskState = !this.addTaskState
-    },
-    dragItem(list, idx) {
-      this.nowDrag.list = list
-      this.nowDrag.idx = idx
+      this.$refs.addTask.focus()
     },
     dragEnterTaskList(e) {
-      if (e.target.classList.contains('tasks')) {
-        e.target.querySelector('.dropzone').style.display = 'block'
-      } else if (
+      if (
         e.target.hasAttribute('data-task-list') &&
         +e.target.dataset?.taskList !== this.nowDrag.list
       ) {
@@ -94,11 +90,18 @@ export default {
         e.target.style.display = 'none'
     },
     drop(e) {
-      e.target.style.display = 'none'
+      document.querySelectorAll('.dropzone').forEach((el) => {
+        el.style.display = 'none'
+        console.log(el)
+      })
       this.tasks[+e.target.dataset.taskList].push(
-        this.tasks[+this.nowDrag.list][+this.nowDrag.idx]
+        this.tasks[this.nowDrag.list][this.nowDrag.idx]
       )
-      this.tasks[+this.nowDrag.list].splice(+this.nowDrag.idx, 1)
+      this.tasks[this.nowDrag.list].splice(this.nowDrag.idx, 1)
+      console.log(this.nowDrag)
+      this.tasks.forEach((el) => {
+        el.filter((el) => el !== el)
+      })
     },
   },
 }
