@@ -10,12 +10,11 @@
         first: idx === 0
       }"
   >
-    <p class="task" :data-task-list="list">{{ task }}</p>
-    <div class="options">
+    <p class="task" :data-task-list="list" draggable="false">{{ task }}</p>
+    <div class="options" draggable="false">
       <button class="btn-more">
         <span
           class="material-icons"
-          draggable="false"
           :data-task-list="list"
         >
           more_horiz
