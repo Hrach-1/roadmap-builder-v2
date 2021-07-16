@@ -12,20 +12,28 @@
   >
     <p class="task" :data-task-list="list">{{ task }}</p>
     <div class="options">
-      <img
-        src="../assets/more.svg"
-        alt="more"
-        width="16"
-        draggable="false"
-        :data-task-list="list"
-      />
+      <button class="btn-more">
+        <span
+          class="material-icons"
+          draggable="false"
+          :data-task-list="list"
+        >
+          more_horiz
+        </span>
+        <Tooltip/>
+      </button>
+      <div class="avatar-thumbnail">
+        <img src="../assets/avatar.svg" alt="user" width="24">
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Tooltip from "@/components/Tooltip";
 export default {
   name: 'Task',
+  components: {Tooltip},
   data: () => ({}),
   props: {
     task: {
@@ -55,7 +63,7 @@ export default {
 <style scoped>
 .task-box {
   border: 1px solid #e4e4e4;
-  padding: 20px 16px;
+  padding: 5px 16px;
   border-radius: 4px;
   width: 322px;
   color: #868f9c;
@@ -63,7 +71,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* cursor: grab; */
+   cursor: grab;
   box-shadow: 0.5px 2px 14px 0px #e4e4e4;
   transition: 0.2s;
   box-sizing: border-box;
@@ -80,13 +88,15 @@ export default {
   box-shadow: 6px 10px 11px 0px #e4e4e4;
 }
 
-.task-box:hover .options {
-  opacity: 1;
-}
+/*.task-box:hover .options {*/
+/*  opacity: 1;*/
+/*}*/
 
 .task-box .options {
   transition: 0.2s;
-  opacity: 0;
+  /*opacity: 0;*/
+  display: flex;
+  flex-direction: column;
 }
 
 .task {
@@ -112,5 +122,25 @@ export default {
   background: blue;
   border-radius: 6px;
   z-index: -1;
+}
+
+.avatar-thumbnail {
+  margin: 0;
+}
+
+.btn-more {
+  border: none;
+  padding:0;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.btn-more span {
+  color: #868f9c;
+  transition: 0.2s;
+}
+
+.btn-more:hover span {
+  color: #000000;
 }
 </style>

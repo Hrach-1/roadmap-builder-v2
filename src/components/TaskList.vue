@@ -7,7 +7,7 @@
     <div class="task-list-header">
       <p class="task-list-title">{{ title }}</p>
       <button @click="toggleAddTaskState" class="task-list-add-task">
-        <img src="../assets/add.svg" alt="Add" width="16" />
+        <img src="../assets/add.svg" alt="Add" width="16"/>
       </button>
     </div>
 
@@ -26,14 +26,21 @@
         @dragover.prevent
         @dragleave="dragLeaveTaskList"
       ></div>
-      <AddTask
-        v-show="addTaskState"
-        :tasksList="tasks[taskList]"
-        @hide="toggleAddTaskState"
-        :list="taskList"
-        :data-task-list="taskList"
-        ref="addTask"
-      />
+
+      <div class="add-card-block">
+        <div class="show-add-card" v-show="!addTaskState" @click="toggleAddTaskState">
+          <button><span class="material-icons">add</span>Add a card</button>
+        </div>
+        <AddTask
+          v-show="addTaskState"
+          :tasksList="tasks[taskList]"
+          @hide="toggleAddTaskState"
+          :list="taskList"
+          :data-task-list="taskList"
+          ref="addTask"
+        />
+      </div>
+
       <Task
         v-for="(task, idx) in tasks[taskList]"
         :key="idx"
@@ -52,7 +59,7 @@ import AddTask from '@/components/AddTask'
 
 export default {
   name: 'TaskList',
-  components: { Task, AddTask },
+  components: {Task, AddTask},
   data: () => ({
     addTaskState: false,
   }),
@@ -84,8 +91,8 @@ export default {
         document
           .querySelectorAll('.tasks')
           [+e.target.dataset.taskList].querySelector(
-            '.dropzone'
-          ).style.display = 'block'
+          '.dropzone'
+        ).style.display = 'block'
       }
     },
     dragLeaveTaskList(e) {
@@ -108,7 +115,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .task-list.first-list {
   padding-right: 48px;
   padding-left: 0;
@@ -157,7 +164,7 @@ export default {
   height: calc(100% - 40px - 40px);
   position: relative;
   padding: 16px;
-width: 322px;
+  width: 322px;
 }
 
 .tasks .dropzone {
@@ -171,5 +178,37 @@ width: 322px;
   right: 0;
   bottom: 0;
   display: none;
+}
+
+.show-add-card {
+  height: 64px;
+  display: flex;
+  //outline: navajowhite 2px solid;
+  margin-bottom: 24px;
+  button {
+    color: #868f9c;
+    border: none;
+    /*background: white;*/
+    //background: transparent;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 8px;
+    //outline: #add5ff 2px solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   background: rgb(238, 238, 238);
+    transition: 0.2s background-color;
+    &:hover {
+      background: rgba(238, 238, 238, 0.8);
+
+    }
+    span {
+      //outline: #edadff 2px solid;
+      margin-right: 8px;
+    }
+  }
 }
 </style>
