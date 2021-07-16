@@ -123,8 +123,8 @@ export default {
 
 .task-list {
   border-right: 1px solid #e4e4e7;
-  padding: 20px 32px;
-  min-height: calc(100vh - 40px);
+  padding: 0 32px;
+  min-height: calc(100%);
 }
 
 .task-list-header {

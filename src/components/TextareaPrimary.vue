@@ -1,6 +1,6 @@
 <template>
   <textarea
-    v-model="task"
+    v-model="value"
     ref="task"
     :rows="rows"
     :cols="cols"
@@ -26,7 +26,7 @@ export default {
     }
   },
   data: () => ({
-    task: '',
+    value: '',
     cols: '',
     rows: '',
   }),
@@ -38,9 +38,13 @@ export default {
     focus() {
       setTimeout(() => this.$refs.task.focus(), 10)
     },
+    clear() {
+      this.value = ''
+      this.rows = 1
+    }
   },
   watch: {
-    task(val, oldVal) {
+    value(val, oldVal) {
       if (val.length > 1) {
         if ((val.length - 1) % (this.cols - 1) === 0 && val.length > oldVal.length) ++this.rows
         else if ((val.length) % (this.cols - 1) === 0 && val.length < oldVal.length) --this.rows
