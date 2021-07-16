@@ -20,7 +20,7 @@
         >
           more_horiz
         </span>
-        <Tooltip/>
+<!--        <Tooltip/>-->
       </button>
       <div class="avatar-thumbnail">
         <img src="../assets/avatar.svg" alt="user" width="24">
