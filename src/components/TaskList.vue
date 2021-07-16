@@ -1,5 +1,9 @@
 <template>
-  <div class="task-list" :class="{ first: firstList }" draggable="false">
+  <div
+    class="task-list"
+    :class="{ 'first-list': taskList === 0 }"
+    draggable="false"
+  >
     <div class="task-list-header">
       <p class="task-list-title">{{ title }}</p>
       <button @click="toggleAddTaskState" class="task-list-add-task">
@@ -9,8 +13,11 @@
 
     <div
       class="tasks"
+      @dragover.prevent
       @dragenter.prevent="dragEnterTaskList"
+      @drop.prevent
       :data-task-list="taskList"
+      draggable="false"
     >
       <div
         class="dropzone"
@@ -59,10 +66,6 @@ export default {
       type: Array,
       required: true,
     },
-    firstList: {
-      default: false,
-      type: Boolean,
-    },
     taskList: {
       type: Number,
       required: true,
@@ -92,13 +95,11 @@ export default {
     drop(e) {
       document.querySelectorAll('.dropzone').forEach((el) => {
         el.style.display = 'none'
-        console.log(el)
       })
       this.tasks[+e.target.dataset.taskList].push(
         this.tasks[this.nowDrag.list][this.nowDrag.idx]
       )
       this.tasks[this.nowDrag.list].splice(this.nowDrag.idx, 1)
-      console.log(this.nowDrag)
       this.tasks.forEach((el) => {
         el.filter((el) => el !== el)
       })
@@ -114,9 +115,8 @@ export default {
 }
 
 .task-list {
-  width: 320px;
   border-right: 1px solid #e4e4e7;
-  padding: 20px 48px;
+  padding: 20px 32px;
   min-height: calc(100vh - 40px);
 }
 
@@ -154,19 +154,22 @@ export default {
 }
 
 .task-list .tasks {
-  height: calc(100% - 40px);
-}
-
-.tasks {
+  height: calc(100% - 40px - 40px);
   position: relative;
+  padding: 16px;
+width: 322px;
 }
 
 .tasks .dropzone {
   width: 100%;
   height: 100%;
   position: absolute;
-  background: rgba(238, 238, 238, 0.25);
-  /*background: red;*/
+  border-radius: 8px;
+  background: rgba(226, 226, 226, 0.25);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: none;
 }
 </style>

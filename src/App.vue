@@ -1,7 +1,7 @@
 <!-- :now-drag="nowDrag" -->
 
 <template>
-  <div class="roadmap" ref="roadmap">
+  <div id="roadmap" ref="roadmap">
     <TaskList
       v-for="(title, idx) in taskListTitles"
       :key="idx"
@@ -61,9 +61,34 @@ body {
   margin: 0;
 }
 
-.roadmap {
+#roadmap {
   margin: 0;
   padding: 0 16px;
   display: flex;
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
 }
 </style>
