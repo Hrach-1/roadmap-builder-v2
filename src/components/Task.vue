@@ -1,6 +1,6 @@
 <template>
 
-  <div>
+  <div class="task-box-container">
     <div
       class="task-box"
       draggable="true"
@@ -47,7 +47,8 @@ export default {
   data: () => ({
     edit: false,
     tooltipShow:false,
-    editAreaRows: 1
+    editAreaRows: 1,
+    hideTask: true
   }),
   props: {
     task: {
@@ -71,7 +72,7 @@ export default {
       e.target.style.opacity = 1
     },
     drag(e) {
-      console.log(e)
+      // console.log(e)
     },
     toggleEdit() {
       this.edit = !this.edit
@@ -103,6 +104,11 @@ export default {
     justify-content: flex-end;
     margin-top: 16px;
   }
+}
+
+.task-box-container {
+  background-color: #e2e2e2;
+  border-radius: 6px;
 }
 
 .task-box {

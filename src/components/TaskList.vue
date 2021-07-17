@@ -23,7 +23,7 @@
         class="dropzone"
         :data-task-list="taskList"
         @drop.prevent="drop"
-        @dragover.prevent
+        @dragover.prevent='dragOver'
         @dragleave="dragLeaveTaskList"
       ></div>
 
@@ -64,6 +64,7 @@ export default {
   components: {Task, AddTask},
   data: () => ({
     addTaskState: false,
+    dragPlace: 0
   }),
   inject: ['nowDrag'],
   props: {
@@ -87,9 +88,13 @@ export default {
     },
     dragEnterTaskList(e) {
       if (
-        e.target.hasAttribute('data-task-list') &&
-        +e.target.dataset?.taskList !== this.nowDrag.list
+        e.target.hasAttribute('data-task-list')
+        // &&
+        // +e.target.dataset?.taskList !== this.nowDrag.list
       ) {
+        document.querySelectorAll('.dropzone').forEach((el) => {
+          el.style.display = 'none'
+        })
         document
           .querySelectorAll('.tasks')
           [+e.target.dataset.taskList].querySelector(
@@ -102,20 +107,51 @@ export default {
         e.target.style.display = 'none'
     },
     drop(e) {
+      this.tasks[+e.target.dataset.taskList].splice(this.place, 0, this.tasks[this.nowDrag.list][this.nowDrag.idx])
+
+      if (+e.target.dataset.taskList === this.nowDrag.list){
+        if (this.nowDrag.idx > this.place) {
+          this.tasks[this.nowDrag.list].splice(this.nowDrag.idx+1, 1)
+        }else if (this.nowDrag.idx < this.place) {
+          this.tasks[this.nowDrag.list].splice(this.nowDrag.idx, 1)
+        }
+      } else {
+        this.tasks[this.nowDrag.list].splice(this.nowDrag.idx, 1)
+      }
+
+
+      console.log(this.nowDrag.list, this.nowDrag.idx)
+      this.tasks.forEach((el) => {
+        el.filter((task) => task !== '')
+      })
       document.querySelectorAll('.dropzone').forEach((el) => {
         el.style.display = 'none'
       })
-      this.tasks[+e.target.dataset.taskList].push(
-        this.tasks[this.nowDrag.list][this.nowDrag.idx]
-      )
-      this.tasks[this.nowDrag.list].splice(this.nowDrag.idx, 1)
-      this.tasks.forEach((el) => {
-        el.filter((el) => el !== el)
-      })
     },
+    dragOver(e) {
+      // console.log(e)
+      const between = 88
+      const startWith = 156
+      const cordY = e.clientY
+      this.place = this.tasks[this.taskList].length
+      if (cordY < startWith + 44) {
+        this.place = 0
+        // console.log('Place is : ', this.place)
+      } else {
+        for (let i = 0; i < this.tasks[this.taskList].length; i++) {
+          if (cordY > startWith + 44 + between * i && cordY < startWith + 44 + between * (i + 1)) {
+            this.place = (i + 1)
+            // console.log('Place is : ', this.place)
+            break
+          }
+        }
+      }
+    }
+    ,
     saveTaskEdit(obj) {
       this.tasks[obj.list].splice(obj.idx, 1, obj.text)
-    },
+    }
+    ,
     deleteTask(obj) {
       this.tasks[obj.list].splice(obj.idx, 1)
     }
@@ -193,6 +229,7 @@ export default {
   display: flex;
   //outline: navajowhite 2px solid;
   margin-bottom: 24px;
+
   button {
     color: #868f9c;
     border: none;
@@ -207,12 +244,14 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-   background: rgb(238, 238, 238);
+    background: rgb(238, 238, 238);
     transition: 0.2s background-color;
+
     &:hover {
       background: rgba(238, 238, 238, 0.8);
 
     }
+
     span {
       //outline: #edadff 2px solid;
       margin-right: 8px;
