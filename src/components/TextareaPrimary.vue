@@ -93,7 +93,6 @@ textarea {
   overflow-wrap: break-word;
   &:focus {
     outline: none;
-    //border: black;
   }
 }
 </style>

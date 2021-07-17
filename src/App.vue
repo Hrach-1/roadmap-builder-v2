@@ -1,7 +1,5 @@
-<!-- :now-drag="nowDrag" -->
-
 <template>
-  <div id="roadmap" ref="roadmap">
+  <div id="roadmap" ref="roadmap" :class="roadmapHeight">
     <TaskList
       v-for="(title, idx) in taskListTitles"
       :key="idx"
@@ -27,8 +25,11 @@ export default {
     TaskList,
     Task,
   },
+
   data: () => ({
-    taskListTitles: ['Planned', 'Under consideration', 'Already Shipped'],
+    ClientHeight: 0,
+    scrollHeight: 18,
+    taskListTitles: ['Planned', 'Under consideration'],
     tasks: [
       [
         'Faster refresh rate on event plan',
@@ -52,13 +53,35 @@ export default {
       ]
     ],
   }),
+  computed: {
+    roadmapHeight() {
+      return {
+        minHeight: `calc(100vh - 40px - ${this.scrollHeight}px}`
+      }
+    }
+  },
+  mounted() {
+    this.ClientHeight = document. documentElement.clientHeight
+  },
+  updated() {
+    this.ClientHeight = document. documentElement.clientHeight
+  },
+  watch: {
+    ClientHeight(val, oldVal) {
+      if (val > oldVal) {
+        this.scrollHeight = 0
+      }else {
+        this.scrollHeight = 18
+      }
+    }
+  },
   provide: {
     nowDrag: {},
   },
 }
 </script>
 
-<style>
+<style lang="scss">
 body {
   font-family: 'Roboto', sans-serif;
   margin: 0;
@@ -67,8 +90,9 @@ body {
 #roadmap {
   margin: 0;
   display: flex;
-  padding: 20px 16px;
-  min-height: calc(100vh - 40px);
+  padding: 20px 32px;
+  //min-height: calc(100vh - 40px - 18px);
+  width: fit-content;
 }
 
 .material-icons {

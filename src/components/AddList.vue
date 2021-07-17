@@ -2,7 +2,7 @@
   <div class="add-list-block" :class="{
     first: taskListTitles.length === 0
   }">
-    <ButtonBig label="Add a list" @click="toggleAddList" v-show="!showAddList"/>
+    <ButtonBigAdd label="Add a list" @click="toggleAddList" v-show="!showAddList"/>
     <div class="add-task"  v-show="showAddList">
       <TextareaPrimary @keypress.enter="addList" placeholder="Enter list title" ref="addList"/>
       <div class="toolbar">
@@ -18,12 +18,12 @@
 <script>
 import ButtonPrimary from "@/components/ButtonPrimary";
 import ButtonClose from "@/components/ButtonClose";
-import ButtonBig from "@/components/ButtonBig";
+import ButtonBigAdd from "@/components/ButtonBigAdd";
 import TextareaPrimary from "@/components/TextareaPrimary";
 
 export default {
   name: 'AddList',
-  components: {TextareaPrimary, ButtonBig, ButtonClose, ButtonPrimary},
+  components: {TextareaPrimary, ButtonBigAdd, ButtonClose, ButtonPrimary},
   props: {
     'tasks': {
       type: Array,
@@ -46,9 +46,9 @@ export default {
     },
     addList() {
       const $textarea = this.$refs.addList
-      if ($textarea.value) {
+      if ($textarea.text) {
         this.tasks.push([])
-        this.taskListTitles.push($textarea.value)
+        this.taskListTitles.push($textarea.text)
         $textarea.clear()
         this.toggleAddList()
       }
@@ -62,7 +62,6 @@ export default {
   min-width: 322px;
   box-sizing: border-box;
   margin-left: 48px;
-
   &.first {
     margin-left: 0;
   }

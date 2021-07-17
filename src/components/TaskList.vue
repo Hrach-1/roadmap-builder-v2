@@ -28,9 +28,7 @@
       ></div>
 
       <div class="add-card-block">
-        <div class="show-add-card" v-show="!addTaskState" @click="toggleAddTaskState">
-          <button><span class="material-icons">add</span>Add a card</button>
-        </div>
+        <ButtonBigAdd v-show="!addTaskState" @click="toggleAddTaskState" label="Add a card"/>
         <AddTask
           v-show="addTaskState"
           :tasksList="tasks[taskList]"
@@ -58,10 +56,11 @@
 <script>
 import Task from '@/components/Task'
 import AddTask from '@/components/AddTask'
+import ButtonBigAdd from "@/components/ButtonBigAdd";
 
 export default {
   name: 'TaskList',
-  components: {Task, AddTask},
+  components: {ButtonBigAdd, Task, AddTask},
   data: () => ({
     addTaskState: false,
     dragPlace: 0
@@ -89,8 +88,6 @@ export default {
     dragEnterTaskList(e) {
       if (
         e.target.hasAttribute('data-task-list')
-        // &&
-        // +e.target.dataset?.taskList !== this.nowDrag.list
       ) {
         document.querySelectorAll('.dropzone').forEach((el) => {
           el.style.display = 'none'
@@ -120,7 +117,6 @@ export default {
       }
 
 
-      console.log(this.nowDrag.list, this.nowDrag.idx)
       this.tasks.forEach((el) => {
         el.filter((task) => task !== '')
       })
@@ -129,19 +125,16 @@ export default {
       })
     },
     dragOver(e) {
-      // console.log(e)
       const between = 88
       const startWith = 156
       const cordY = e.clientY
       this.place = this.tasks[this.taskList].length
       if (cordY < startWith + 44) {
         this.place = 0
-        // console.log('Place is : ', this.place)
       } else {
         for (let i = 0; i < this.tasks[this.taskList].length; i++) {
           if (cordY > startWith + 44 + between * i && cordY < startWith + 44 + between * (i + 1)) {
             this.place = (i + 1)
-            // console.log('Place is : ', this.place)
             break
           }
         }
@@ -160,101 +153,68 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.task-list.first-list {
-  padding-right: 48px;
-  padding-left: 0;
-}
-
 .task-list {
   border-right: 1px solid #e4e4e7;
   padding: 0 32px;
   min-height: calc(100%);
-}
 
-.task-list-header {
-  width: 100%;
-  color: #000000;
-  font-weight: 500;
-  align-items: center;
-  display: flex;
-  box-sizing: border-box;
-  justify-content: space-between;
-  /*outline: 1px solid blue;*/
-  margin-bottom: 28px;
-}
+  &.first-list {
+    padding-right: 48px;
+    padding-left: 0;
+  }
 
-.task-list-title {
-  width: 280px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  margin: 0;
-}
-
-.task-list .task-list-add-task {
-  border: none;
-  background: transparent;
-  /*outline: 1px solid blue;*/
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
-}
-
-.task-list .task-list-add-task:focus {
-  outline: none;
-}
-
-.task-list .tasks {
-  height: calc(100% - 40px - 40px);
-  position: relative;
-  padding: 16px;
-  width: 322px;
-}
-
-.tasks .dropzone {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  border-radius: 8px;
-  background: rgba(226, 226, 226, 0.25);
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: none;
-}
-
-.show-add-card {
-  height: 64px;
-  display: flex;
-  //outline: navajowhite 2px solid;
-  margin-bottom: 24px;
-
-  button {
-    color: #868f9c;
-    border: none;
-    /*background: white;*/
-    //background: transparent;
-    font-size: 16px;
-    font-family: 'Roboto', sans-serif;
-    cursor: pointer;
+  .task-list-header {
     width: 100%;
-    border-radius: 8px;
-    //outline: #add5ff 2px solid;
-    display: flex;
-    justify-content: center;
+    color: #000000;
+    font-weight: 500;
     align-items: center;
-    background: rgb(238, 238, 238);
-    transition: 0.2s background-color;
+    display: flex;
+    box-sizing: border-box;
+    justify-content: space-between;
+    margin-bottom: 28px;
 
-    &:hover {
-      background: rgba(238, 238, 238, 0.8);
-
+    .task-list-title {
+      width: 280px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin: 0;
     }
 
-    span {
-      //outline: #edadff 2px solid;
-      margin-right: 8px;
+    .task-list-add-task {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .tasks {
+    min-height: calc(100% - 40px - 40px);
+    position: relative;
+    padding: 16px;
+    width: 322px;
+
+    .dropzone {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      border-radius: 8px;
+      background: rgba(226, 226, 226, 0.25);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+    }
+
+    .add-card-block {
+      margin-bottom: 24px;
     }
   }
 }

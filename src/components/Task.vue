@@ -6,7 +6,6 @@
       draggable="true"
       @dragstart="dragStart"
       @dragend="dragEnd"
-      @drag="drag"
       :class="{
         first: idx === 0
       }"
@@ -34,7 +33,6 @@
 
 <script>
 import ButtonPrimary from "@/components/ButtonPrimary";
-;
 
 import Tooltip from "@/components/Tooltip";
 import ButtonMore from "@/components/ButtonMore";
@@ -71,9 +69,6 @@ export default {
     dragEnd(e) {
       e.target.style.opacity = 1
     },
-    drag(e) {
-      // console.log(e)
-    },
     toggleEdit() {
       this.edit = !this.edit
       console.log(this.edit)
@@ -81,7 +76,6 @@ export default {
           const $textarea =this.$refs.editArea
           $textarea.focus()
           $textarea.text = this.task
-          // $textarea.rows = this.editAreaRows
       }
     },
     saveEdit() {

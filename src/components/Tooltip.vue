@@ -16,9 +16,6 @@ export default {
 <style scoped lang="scss">
   .tooltip {
     position: absolute;
-    //right: 0;
-    //bottom: 0;
-    //top: 0px;
     left: 28px;
     background-color: rgba(248, 248, 248, 0.73);
     border-radius: 4px;
