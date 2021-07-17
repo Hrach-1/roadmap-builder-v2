@@ -1,6 +1,5 @@
 <template>
 
-  <div class="task-box-container">
     <div
       class="task-box"
       draggable="true"
@@ -28,7 +27,6 @@
         <ButtonPrimary label="save" @click="saveEdit"/>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -81,9 +79,11 @@ export default {
     saveEdit() {
       this.$emit('editTask', {text: this.$refs.editArea.text, list: this.list, idx: this.idx})
       this.edit = !this.edit
+      this.tooltipShow = false
     },
     deleteTask() {
       this.$emit('deleteTask', {list: this.list, idx: this.idx})
+      this.tooltipShow = false
     },
   },
 }
@@ -100,10 +100,7 @@ export default {
   }
 }
 
-.task-box-container {
-  background-color: #e2e2e2;
-  border-radius: 6px;
-}
+
 
 .task-box {
   border: 1px solid #e4e4e4;

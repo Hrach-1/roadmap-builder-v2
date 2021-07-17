@@ -5,10 +5,17 @@
     draggable="false"
   >
     <div class="task-list-header">
-      <p class="task-list-title">{{ title }}</p>
-      <button @click="toggleAddTaskState" class="task-list-add-task">
-        <img src="../assets/add.svg" alt="Add" width="16"/>
-      </button>
+      <div class="task-list-title">
+        <h3 v-if="!taskListTitleEdit">{{ titles[taskList] }}</h3>
+        <div class="task-list-title-edit" v-if="taskListTitleEdit">
+          <input type="text" ref="taskListTitle" v-model="taskListTitle" @keypress.enter="taskListTitleSave">
+          <EditToolbar @toolbarSave="taskListTitleSave" @toolbarClose="toggleTaskListTitleEdit"/>
+        </div>
+      </div>
+      <div class="options">
+        <ButtonMore @click="toggleTaskListTooltip"/>
+        <Tooltip :add="true" v-if="taskListTooltipShow" @edit="toggleTaskListTitleEdit" @add="toggleAddTaskState" @delete="taskListDelete"/>
+      </div>
     </div>
 
     <div
@@ -57,19 +64,28 @@
 import Task from '@/components/Task'
 import AddTask from '@/components/AddTask'
 import ButtonBigAdd from "@/components/ButtonBigAdd";
+import ButtonMore from "@/components/ButtonMore";
+import Tooltip from "@/components/Tooltip";
+import EditToolbar from "@/components/EditToolbar";
 
 export default {
   name: 'TaskList',
-  components: {ButtonBigAdd, Task, AddTask},
+  components: {EditToolbar, Tooltip, ButtonMore, ButtonBigAdd, Task, AddTask},
   data: () => ({
     addTaskState: false,
-    dragPlace: 0
+    taskListTooltipShow: false,
+    taskListTitleEdit: false,
+    dragPlace: 0,
+    taskListTitle: ''
   }),
+  mounted() {
+    this.taskListTitle = this.titles[this.taskList]
+  },
   inject: ['nowDrag'],
   props: {
-    title: {
+    titles: {
       required: true,
-      type: String,
+      type: Array,
     },
     tasks: {
       type: Array,
@@ -84,6 +100,14 @@ export default {
     toggleAddTaskState() {
       this.addTaskState = !this.addTaskState
       this.$refs.addTask.focus()
+      this.taskListTooltipShow = false
+    },
+    toggleTaskListTooltip() {
+      this.taskListTooltipShow = !this.taskListTooltipShow
+    },
+    toggleTaskListTitleEdit() {
+      this.taskListTitleEdit = !this.taskListTitleEdit
+      this.toggleTaskListTooltip()
     },
     dragEnterTaskList(e) {
       if (
@@ -126,7 +150,7 @@ export default {
     },
     dragOver(e) {
       const between = 88
-      const startWith = 156
+      const startWith = 204
       const cordY = e.clientY
       this.place = this.tasks[this.taskList].length
       if (cordY < startWith + 44) {
@@ -147,6 +171,19 @@ export default {
     ,
     deleteTask(obj) {
       this.tasks[obj.list].splice(obj.idx, 1)
+    },
+    taskListTitleSave() {
+      console.log('Save')
+      this.titles.splice(this.taskList, 1, this.taskListTitle)
+      this.toggleTaskListTitleEdit()
+      console.log(this.titles)
+      this.toggleTaskListTooltip()
+    },
+    taskListDelete() {
+      console.log('Delete')
+      this.tasks.splice(this.taskList, 1)
+      this.titles.splice(this.taskList, 1)
+      this.toggleTaskListTooltip()
     }
   },
 }
@@ -172,13 +209,36 @@ export default {
     box-sizing: border-box;
     justify-content: space-between;
     margin-bottom: 28px;
+    height: 64px;
+
+    .options {
+      position: relative;
+
+    }
 
     .task-list-title {
-      width: 280px;
+      width: 294px;
       overflow: hidden;
-      white-space: nowrap;
       text-overflow: ellipsis;
       margin: 0;
+      margin-right: 16px;
+      h3{
+        margin: 0;
+        padding: 0;
+        text-overflow: ellipsis;
+        width: 100%;
+      }
+      input {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 16px;
+        margin: 0;
+        box-sizing: border-box;
+        margin-top: 40px;
+        border: 1px solid #e4e4e4;
+        border-radius: 4px;
+
+      }
     }
 
     .task-list-add-task {

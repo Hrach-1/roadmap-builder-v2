@@ -1,15 +1,30 @@
 <template>
   <div class="tooltip">
     <ul>
-      <li class="bb material-icons" @click="$emit('edit')">edit</li>
-      <li class="material-icons" @click="$emit('delete')">delete</li>
+      <li class="material-icons" @click="$emit('add')" v-if="add">add</li>
+      <li class="material-icons" @click="$emit('edit')" v-if="edit">edit</li>
+      <li class="material-icons" @click="$emit('delete')" v-if="del" >delete</li>
     </ul>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Tooltip"
+  name: "Tooltip",
+  props: {
+    edit: {
+      type: Boolean,
+      default: true
+    },
+    del: {
+      type: Boolean,
+      default: true
+    },
+    add: {
+      type: Boolean,
+      default: false
+    }
+  }
 }
 </script>
 
@@ -24,20 +39,28 @@ export default {
       list-style: none;
       padding: 0;
       margin: 0;
+
+
       li {
         cursor:pointer;
         padding: 8px 8px 8px 8px;
         margin: 0;
-        border-radius: 0 0 4px 4px ;
         transition: 0.2s background-color;
-
+        color: #868f9c;
         &:hover {
           background-color: rgb(234, 234, 234);
+          color: #000000;
         }
 
-        &.bb {
-          border-bottom: 1px solid #a0a0a0;
+        &:first-child {
           border-radius: 4px 4px 0 0 ;
+
+        }
+        &:not(:last-child) {
+          border-bottom: 1px solid #a0a0a0;
+        }
+        &:last-child {
+          border-radius: 0 0 4px 4px ;
         }
       }
     }

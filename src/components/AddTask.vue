@@ -1,6 +1,6 @@
 <template>
-  <div class="add-task" @keypress.enter="addTask">
-    <textarea v-model="task" ref="task" rows="1" cols="30" placeholder="Enter a note"></textarea>
+  <div class="add-task" >
+    <textarea v-model="task" ref="task" rows="1" cols="30" placeholder="Enter a note" @keypress.enter="addTask"></textarea>
 
     <div class="toolbar">
       <button type="button" @click="close" class="add-task-button-close">

@@ -3,7 +3,7 @@
     <TaskList
       v-for="(title, idx) in taskListTitles"
       :key="idx"
-      :title="title"
+      :titles="taskListTitles"
       :task-list="idx"
       :tasks="tasks"
     />
@@ -29,7 +29,7 @@ export default {
   data: () => ({
     ClientHeight: 0,
     scrollHeight: 18,
-    taskListTitles: ['Planned', 'Under consideration'],
+    taskListTitles: ['Planned', 'Under consideration', 'Alex'],
     tasks: [
       [
         'Faster refresh rate on event plan',
@@ -91,7 +91,7 @@ body {
   margin: 0;
   display: flex;
   padding: 20px 32px;
-  //min-height: calc(100vh - 40px - 18px);
+  min-height: calc(100vh - 40px);
   width: fit-content;
 }
 
