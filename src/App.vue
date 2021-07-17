@@ -28,9 +28,28 @@ export default {
     Task,
   },
   data: () => ({
-    taskListTitles: [],
+    taskListTitles: ['Planned', 'Under consideration', 'Already Shipped'],
     tasks: [
-
+      [
+        'Faster refresh rate on event plan',
+        'Instagram stories',
+        'Image optimization, minify JS/CSS/HTML',
+        'Facebook groups source',
+        'Shopify App'
+      ],
+      [
+        'Web hook for article deletion',
+        'Facebook Groups Source',
+        'Shopify App 2'
+      ],
+      [
+        'Small resolution images',
+        'Tiktok source',
+        'Image optimization, minify JS/CSS/HTML 2',
+        'Turn disconnection emails off for something',
+        'Instagram @mention source',
+        'More detailed help videos'
+      ]
     ],
   }),
   provide: {
@@ -49,14 +68,14 @@ body {
   margin: 0;
   display: flex;
   padding: 20px 16px;
-min-height: calc(100vh - 40px);
+  min-height: calc(100vh - 40px);
 }
 
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;  /* Preferred icon size */
+  font-size: 24px; /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;

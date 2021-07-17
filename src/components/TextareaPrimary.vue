@@ -1,6 +1,6 @@
 <template>
   <textarea
-    v-model="value"
+    v-model="text"
     ref="task"
     :rows="rows"
     :cols="cols"
@@ -26,29 +26,45 @@ export default {
     }
   },
   data: () => ({
-    value: '',
+    text: '',
     cols: '',
     rows: '',
+    oldClientWidth: 0
   }),
   mounted() {
     this.cols = this.Pcols
     this.rows = this.Prows
+    this.oldClientWidth = this.$refs.task.clientWidth
   },
   methods: {
     focus() {
       setTimeout(() => this.$refs.task.focus(), 10)
     },
     clear() {
-      this.value = ''
+      this.text = ''
       this.rows = 1
     }
   },
   watch: {
-    value(val, oldVal) {
+    text(val, oldVal) {
       if (val.length > 1) {
         if ((val.length - 1) % (this.cols - 1) === 0 && val.length > oldVal.length) ++this.rows
         else if ((val.length) % (this.cols - 1) === 0 && val.length < oldVal.length) --this.rows
       }
+      // if (val.length > 1 && this.$refs.task.clientWidth < this.oldClientWidth) {
+      //   if (val.length > oldVal.length) ++this.rows
+      //   else if ((val.length) % (this.cols - 1) === 0 && val.length < oldVal.length) --this.rows
+      // }
+      // if (this.$refs.task.clientWidth < this.oldClientWidth) ++this.rows
+      // this.oldClientWidth = this.$refs.task.clientWidth
+      // setTimeout(() => {
+      //
+      // }, 10)
+      // console.log(this.text)
+
+      // const numberOfLineBreaks = (val.match(/\n/g)||[]).length;
+      // const characterCount = val.length + numberOfLineBreaks;
+      // console.log(numberOfLineBreaks)
     }
   }
 }
@@ -56,7 +72,7 @@ export default {
 
 <style scoped lang="scss">
 textarea {
-  font-size: 18px;
+  font-size: 16px;
   border: 1px solid #e4e4e7;
   border-radius: 4px;
   color: #868f9c;
@@ -71,7 +87,10 @@ textarea {
   resize: none;
   padding: 20px 16px;
   font-family: 'Roboto', sans-serif;
-
+  white-space: pre-wrap;
+  width: 100%;
+  overflow: hidden;
+  overflow-wrap: break-word;
   &:focus {
     outline: none;
     //border: black;

@@ -1,39 +1,54 @@
 <template>
 
-  <div
-    class="task-box"
-    draggable="true"
-    @dragstart="dragStart"
-    @dragend="dragEnd"
-    @drag="drag"
-    :class="{
+  <div>
+    <div
+      class="task-box"
+      draggable="true"
+      @dragstart="dragStart"
+      @dragend="dragEnd"
+      @drag="drag"
+      :class="{
         first: idx === 0
       }"
-  >
-    <p class="task" :data-task-list="list" draggable="false">{{ task }}</p>
-    <div class="options" draggable="false">
-      <button class="btn-more">
-        <span
-          class="material-icons"
-          :data-task-list="list"
-        >
-          more_horiz
-        </span>
-<!--        <Tooltip/>-->
-      </button>
-      <div class="avatar-thumbnail">
-        <img src="../assets/avatar.svg" alt="user" width="24">
+      v-show="!edit"
+    >
+      <p class="task" :data-task-list="list" draggable="false">{{ task }}</p>
+      <div class="options" draggable="false">
+        <ButtonMore draggable="false" :data-task-list="list" @click="tooltipShow = !tooltipShow"/>
+        <Tooltip @edit="toggleEdit" @delete="deleteTask" v-if="tooltipShow"/>
+        <div class="avatar-thumbnail" draggable="false">
+          <img src="../assets/avatar.svg" alt="user" width="24" draggable="false">
+        </div>
+      </div>
+    </div>
+
+    <div class="edit-block" v-show="edit">
+      <TextareaPrimary  ref="editArea" @keypress.enter="saveEdit" @keydown.esc="toggleEdit"/>
+      <div class="toolbar">
+        <ButtonClose @click="toggleEdit"/>
+        <ButtonPrimary label="save" @click="saveEdit"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import ButtonPrimary from "@/components/ButtonPrimary";
+;
+
 import Tooltip from "@/components/Tooltip";
+import ButtonMore from "@/components/ButtonMore";
+import TextareaPrimary from "@/components/TextareaPrimary";
+import ButtonClose from "@/components/ButtonClose";
+
 export default {
   name: 'Task',
-  components: {Tooltip},
-  data: () => ({}),
+  components: {ButtonClose, ButtonPrimary, TextareaPrimary, ButtonMore, Tooltip},
+  data: () => ({
+    edit: false,
+    tooltipShow:false,
+    editAreaRows: 1
+  }),
   props: {
     task: {
       require: true,
@@ -41,6 +56,9 @@ export default {
     },
     list: Number,
     idx: Number,
+  },
+  mounted() {
+    this.editAreaRows = Math.ceil((this.task.length)/29) || 1
   },
   inject: ['nowDrag'],
   methods: {
@@ -55,11 +73,38 @@ export default {
     drag(e) {
       console.log(e)
     },
+    toggleEdit() {
+      this.edit = !this.edit
+      console.log(this.edit)
+      if (this.edit) {
+          const $textarea =this.$refs.editArea
+          $textarea.focus()
+          $textarea.text = this.task
+          // $textarea.rows = this.editAreaRows
+      }
+    },
+    saveEdit() {
+      this.$emit('editTask', {text: this.$refs.editArea.text, list: this.list, idx: this.idx})
+      this.edit = !this.edit
+    },
+    deleteTask() {
+      this.$emit('deleteTask', {list: this.list, idx: this.idx})
+    },
   },
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.edit-block {
+  margin-top: 24px;
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
+}
+
 .task-box {
   border: 1px solid #e4e4e4;
   padding: 5px 16px;
@@ -70,76 +115,38 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-   cursor: grab;
+  cursor: grab;
   box-shadow: 0.5px 2px 14px 0px #e4e4e4;
   transition: 0.2s;
   box-sizing: border-box;
   background: #ffffff;
   margin-top: 24px;
 
-}
+  &:hover {
+    box-shadow: 6px 10px 11px 0 #e4e4e4;
+  }
 
-.first {
-  margin-top: 0;
-}
+  &.first {
+    margin-top: 0;
+  }
 
-.task-box:hover {
-  box-shadow: 6px 10px 11px 0px #e4e4e4;
-}
+  .task {
+    width: 260px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
 
-/*.task-box:hover .options {*/
-/*  opacity: 1;*/
-/*}*/
+  .options {
+    transition: 0.2s;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 
-.task-box .options {
-  transition: 0.2s;
-  /*opacity: 0;*/
-  display: flex;
-  flex-direction: column;
-}
-
-.task {
-  width: 260px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  margin: 0;
-}
-
-.task-box-container {
-  position: relative;
-  /*background: red;*/
-  border-radius: 6px;
-}
-
-.task-box-container .task-box-back {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: blue;
-  border-radius: 6px;
-  z-index: -1;
-}
-
-.avatar-thumbnail {
-  margin: 0;
-}
-
-.btn-more {
-  border: none;
-  padding:0;
-  margin: 0;
-  background: transparent;
-  cursor: pointer;
-}
-.btn-more span {
-  color: #868f9c;
-  transition: 0.2s;
-}
-
-.btn-more:hover span {
-  color: #000000;
+    .avatar-thumbnail {
+      margin: 0;
+    }
+  }
 }
 </style>

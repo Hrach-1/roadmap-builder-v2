@@ -48,6 +48,8 @@
         :list="taskList"
         :idx="idx"
         :data-task-list="taskList"
+        @editTask="saveTaskEdit"
+        @deleteTask="deleteTask"
       />
     </div>
   </div>
@@ -111,6 +113,12 @@ export default {
         el.filter((el) => el !== el)
       })
     },
+    saveTaskEdit(obj) {
+      this.tasks[obj.list].splice(obj.idx, 1, obj.text)
+    },
+    deleteTask(obj) {
+      this.tasks[obj.list].splice(obj.idx, 1)
+    }
   },
 }
 </script>
