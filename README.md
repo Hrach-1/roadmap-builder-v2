@@ -1,4 +1,4 @@
-# roadmap-builder
+# roadmap-builder-v2
 
 ## Project setup
 ```
