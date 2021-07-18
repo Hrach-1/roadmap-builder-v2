@@ -170,9 +170,6 @@ export default {
     },
     dragOver(e) {
 
-
-
-      // this.taskRefs.filter(el => el!==null)
       const between = 88,
         betweenFirst = 56,
         bigBetween = 176,
@@ -195,11 +192,9 @@ export default {
       if (this.dragPlace) {
         for (let i = 0; i < this.tasks[this.taskList].length; i++) {
           if (this.dragPlace  === this.tasks[this.taskList].length) this.dragPlace = 0
-          // console.log('DragPlace in for :', this.dragPlace)
           if (this.dragPlace === i && i === 0) {
             area += bigBetweenFirst
             this.areas.push(area)
-            // console.log('Zero Drag Place')
           } else if (this.dragPlace === i) {
             area += bigBetween
             this.areas.push(area)
@@ -234,16 +229,10 @@ export default {
         this.dragPlaceOld = this.dragPlace
 
       }
-
-      console.log('Drag Place : ', this.dragPlace)
-      console.log('Drag Old : ', this.dragPlaceOld)
-      // console.log('Areas : ', this.areas)
-    }
-    ,
+    },
     saveTaskEdit(obj) {
       this.tasks[obj.list].splice(obj.idx, 1, obj.text)
-    }
-    ,
+    },
     deleteTask(obj) {
       this.tasks[obj.list].splice(obj.idx, 1)
     },

@@ -51,20 +51,6 @@ export default {
         if ((val.length - 1) % (this.cols - 1) === 0 && val.length > oldVal.length) ++this.rows
         else if ((val.length) % (this.cols - 1) === 0 && val.length < oldVal.length) --this.rows
       }
-      // if (val.length > 1 && this.$refs.task.clientWidth < this.oldClientWidth) {
-      //   if (val.length > oldVal.length) ++this.rows
-      //   else if ((val.length) % (this.cols - 1) === 0 && val.length < oldVal.length) --this.rows
-      // }
-      // if (this.$refs.task.clientWidth < this.oldClientWidth) ++this.rows
-      // this.oldClientWidth = this.$refs.task.clientWidth
-      // setTimeout(() => {
-      //
-      // }, 10)
-      // console.log(this.text)
-
-      // const numberOfLineBreaks = (val.match(/\n/g)||[]).length;
-      // const characterCount = val.length + numberOfLineBreaks;
-      // console.log(numberOfLineBreaks)
     }
   }
 }

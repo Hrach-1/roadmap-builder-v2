@@ -29,7 +29,7 @@ export default {
   data: () => ({
     ClientHeight: 0,
     scrollHeight: 18,
-    taskListTitles: ['Planned', 'Under consideration', 'Alex'],
+    taskListTitles: ['Planned', 'Under consideration', 'Already Shipped'],
     tasks: [
       [
         'Faster refresh rate on event plan',
