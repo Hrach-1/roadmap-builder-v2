@@ -9,22 +9,23 @@
         first: idx === 0
       }"
       v-show="!edit"
+      :data-task-list="list"
     >
       <p class="task" :data-task-list="list" draggable="false">{{ task }}</p>
-      <div class="options" draggable="false">
+      <div class="options" draggable="false" :data-task-list="list">
         <ButtonMore draggable="false" :data-task-list="list" @click="tooltipShow = !tooltipShow"/>
-        <Tooltip @edit="toggleEdit" @delete="deleteTask" v-if="tooltipShow"/>
-        <div class="avatar-thumbnail" draggable="false">
-          <img src="../assets/avatar.svg" alt="user" width="24" draggable="false">
+        <Tooltip @edit="toggleEdit" @delete="deleteTask" v-if="tooltipShow" :data-task-list="list"/>
+        <div class="avatar-thumbnail" draggable="false" :data-task-list="list">
+          <img src="../assets/avatar.svg" alt="user" width="24" draggable="false" :data-task-list="list">
         </div>
       </div>
     </div>
 
-    <div class="edit-block" v-show="edit">
-      <TextareaPrimary  ref="editArea" @keypress.enter="saveEdit" @keydown.esc="toggleEdit"/>
-      <div class="toolbar">
-        <ButtonClose @click="toggleEdit"/>
-        <ButtonPrimary label="save" @click="saveEdit"/>
+    <div class="edit-block" v-show="edit" :data-task-list="list">
+      <TextareaPrimary  ref="editArea" @keypress.enter="saveEdit" @keydown.esc="toggleEdit" :data-task-list="list"/>
+      <div class="toolbar" :data-task-list="list">
+        <ButtonClose @click="toggleEdit" :data-task-list="list"/>
+        <ButtonPrimary label="save" @click="saveEdit" :data-task-list="list"/>
       </div>
     </div>
 </template>
@@ -60,6 +61,9 @@ export default {
   inject: ['nowDrag'],
   methods: {
     dragStart(e) {
+      document.querySelectorAll('.dropzone').forEach((el) => {
+        el.style.display = 'none'
+      })
       e.target.style.opacity = 0.4
       this.nowDrag.list = this.list
       this.nowDrag.idx = this.idx
@@ -91,7 +95,6 @@ export default {
 
 <style scoped lang="scss">
 .edit-block {
-  margin-top: 24px;
   .toolbar {
     display: flex;
     align-items: center;

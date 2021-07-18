@@ -14,7 +14,8 @@
       </div>
       <div class="options">
         <ButtonMore @click="toggleTaskListTooltip"/>
-        <Tooltip :add="true" v-if="taskListTooltipShow" @edit="toggleTaskListTitleEdit" @add="toggleAddTaskState" @delete="taskListDelete"/>
+        <Tooltip :add="true" v-if="taskListTooltipShow" @edit="toggleTaskListTitleEdit" @add="toggleAddTaskState"
+                 @delete="taskListDelete"/>
       </div>
     </div>
 
@@ -46,16 +47,21 @@
         />
       </div>
 
-      <Task
+      <div
+        class="task-block"
         v-for="(task, idx) in tasks[taskList]"
-        :key="idx"
-        :task="task"
-        :list="taskList"
-        :idx="idx"
-        :data-task-list="taskList"
-        @editTask="saveTaskEdit"
-        @deleteTask="deleteTask"
-      />
+        :ref="tasksList"
+      >
+        <Task
+          :key="idx"
+          :task="task"
+          :list="taskList"
+          :idx="idx"
+          :data-task-list="taskList"
+          @editTask="saveTaskEdit"
+          @deleteTask="deleteTask"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -75,11 +81,16 @@ export default {
     addTaskState: false,
     taskListTooltipShow: false,
     taskListTitleEdit: false,
-    dragPlace: 0,
-    taskListTitle: ''
+    dragPlace: null,
+    taskListTitle: '',
+    taskRefs: [],
+    dragPlaceOld: null
   }),
   mounted() {
     this.taskListTitle = this.titles[this.taskList]
+  },
+  beforeUpdate() {
+    this.taskRefs = []
   },
   inject: ['nowDrag'],
   props: {
@@ -97,6 +108,9 @@ export default {
     },
   },
   methods: {
+    tasksList(el) {
+      this.taskRefs.push(el)
+    },
     toggleAddTaskState() {
       this.addTaskState = !this.addTaskState
       this.$refs.addTask.focus()
@@ -110,37 +124,42 @@ export default {
       this.toggleTaskListTooltip()
     },
     dragEnterTaskList(e) {
-      if (
-        e.target.hasAttribute('data-task-list')
-      ) {
-        document.querySelectorAll('.dropzone').forEach((el) => {
-          el.style.display = 'none'
-        })
-        document
-          .querySelectorAll('.tasks')
-          [+e.target.dataset.taskList].querySelector(
-          '.dropzone'
-        ).style.display = 'block'
+      document.querySelectorAll('.dropzone').forEach((el) => {
+        el.style.display = 'none'
+      })
+      document.querySelectorAll('.task-block').forEach(el => {
+        el.style.cssText = 'margin-top: 24px;'
+      })
+
+      if (e.target.hasAttribute('data-task-list')) {
+        // document.querySelectorAll('.dropzone').forEach((el) => {
+        //   el.style.display = 'none'
+        // })
+        document.querySelectorAll('.tasks')[+e.target.dataset.taskList].querySelector('.dropzone')
+          .style.display = 'block'
       }
     },
     dragLeaveTaskList(e) {
-      if (e.target.classList.contains('dropzone'))
-        e.target.style.display = 'none'
+      document.querySelectorAll('.dropzone').forEach((el) => {
+        el.style.display = 'none'
+      })
     },
     drop(e) {
-      this.tasks[+e.target.dataset.taskList].splice(this.place, 0, this.tasks[this.nowDrag.list][this.nowDrag.idx])
+      this.tasks[+e.target.dataset.taskList].splice(this.dragPlace, 0, this.tasks[this.nowDrag.list][this.nowDrag.idx])
 
-      if (+e.target.dataset.taskList === this.nowDrag.list){
-        if (this.nowDrag.idx > this.place) {
-          this.tasks[this.nowDrag.list].splice(this.nowDrag.idx+1, 1)
-        }else if (this.nowDrag.idx < this.place) {
+      if (+e.target.dataset.taskList === this.nowDrag.list) {
+        if (this.nowDrag.idx > this.dragPlace) {
+          this.tasks[this.nowDrag.list].splice(this.nowDrag.idx + 1, 1)
+        } else if (this.nowDrag.idx < this.dragPlace) {
           this.tasks[this.nowDrag.list].splice(this.nowDrag.idx, 1)
         }
       } else {
         this.tasks[this.nowDrag.list].splice(this.nowDrag.idx, 1)
       }
 
-
+      this.taskRefs.forEach(el => {
+        el.style.cssText = 'margin-top: 24px;'
+      })
       this.tasks.forEach((el) => {
         el.filter((task) => task !== '')
       })
@@ -149,19 +168,67 @@ export default {
       })
     },
     dragOver(e) {
-      const between = 88
+      const between = 88,
+        betweenFirst = 44,
+        bigBetween = 176,
+        bigBetweenFirst = 132
+
       const startWith = 204
       const cordY = e.clientY
-      this.place = this.tasks[this.taskList].length
+
+      let area = startWith
+      const areas = [area]
+
+      if (this.dragPlace) {
+        for (let i = 0; i < this.tasks[this.taskList].length; i++) {
+          if (this.dragPlace === i && i === 0) {
+            area += bigBetweenFirst
+            areas.push(area)
+          } else if (this.dragPlace === i) {
+            area += bigBetween
+            areas.push(area)
+          }
+          else if(i === 0){
+            area += betweenFirst
+            areas.push(area)
+          } else {
+            area += between
+            areas.push(area)
+          }
+        }
+      }
+
+      this.dragPlace = this.tasks[this.taskList].length
       if (cordY < startWith + 44) {
-        this.place = 0
+        this.dragPlace = 0
       } else {
         for (let i = 0; i < this.tasks[this.taskList].length; i++) {
           if (cordY > startWith + 44 + between * i && cordY < startWith + 44 + between * (i + 1)) {
-            this.place = (i + 1)
+            this.dragPlace = (i + 1)
             break
           }
         }
+      }
+      for (let i = 0; i < this.tasks[this.taskList].length; i++) {
+        if(cordY >= areas[i] && cordY <= areas[i+1]) {
+          this.dragPlace = i
+        }
+      }
+
+
+
+      if (this.dragPlace !== this.dragPlaceOld && this.dragPlaceOld) {
+        this.taskRefs[this.dragPlaceOld].style.cssText = 'margin-top: 24px;'
+        this.dragPlaceOld = this.dragPlace
+      } else if (this.dragPlace !== this.tasks[this.taskList].length) {
+        this.taskRefs[this.dragPlace].style.cssText = 'margin-top: 112px;'
+      }
+
+      this.taskRefs.forEach(el => {
+        el.style.cssText = 'margin-top: 24px;'
+      })
+      if (this.dragPlace !== this.tasks[this.taskList].length) {
+        this.taskRefs[this.dragPlace].style.cssText =  'margin-top: 112px;'
       }
     }
     ,
@@ -173,16 +240,14 @@ export default {
       this.tasks[obj.list].splice(obj.idx, 1)
     },
     taskListTitleSave() {
-      console.log('Save')
       this.titles.splice(this.taskList, 1, this.taskListTitle)
       this.toggleTaskListTitleEdit()
-      console.log(this.titles)
       this.toggleTaskListTooltip()
     },
     taskListDelete() {
-      console.log('Delete')
       this.tasks.splice(this.taskList, 1)
       this.titles.splice(this.taskList, 1)
+      this.taskListTitle = this.titles[this.taskList]
       this.toggleTaskListTooltip()
     }
   },
@@ -222,12 +287,14 @@ export default {
       text-overflow: ellipsis;
       margin: 0;
       margin-right: 16px;
-      h3{
+
+      h3 {
         margin: 0;
         padding: 0;
         text-overflow: ellipsis;
         width: 100%;
       }
+
       input {
         width: 100%;
         padding: 12px 16px;
@@ -275,6 +342,10 @@ export default {
 
     .add-card-block {
       margin-bottom: 24px;
+    }
+
+    .task {
+      margin-top: 24px;
     }
   }
 }
