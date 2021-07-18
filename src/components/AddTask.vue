@@ -20,11 +20,14 @@ export default {
   }),
   methods: {
     addTask(e) {
-      if (this.task) this.tasksList.unshift(this.task)
-      this.task = ''
-      setTimeout(() => this.$refs.task.rows = 1, 10)
+      if (this.task !== '') {
 
-      this.$emit('hide', this.list)
+        if (this.task) this.tasksList.unshift(this.task)
+        this.task = ''
+        setTimeout(() => this.$refs.task.rows = 1, 10)
+
+        this.$emit('hide', this.list)
+      }
     },
     focus() {
       setTimeout(() => this.$refs.task.focus(), 10)

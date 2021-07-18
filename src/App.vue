@@ -91,7 +91,7 @@ body {
   margin: 0;
   display: flex;
   padding: 20px 32px;
-  min-height: calc(100vh - 40px);
+  min-height: calc(100vh - 40px - 24px);
   width: fit-content;
 }
 

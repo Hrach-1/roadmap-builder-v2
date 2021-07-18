@@ -70,6 +70,9 @@ export default {
     },
     dragEnd(e) {
       e.target.style.opacity = 1
+      document.querySelectorAll('.dropzone').forEach((el) => {
+        el.style.display = 'none'
+      })
     },
     toggleEdit() {
       this.edit = !this.edit

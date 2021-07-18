@@ -84,7 +84,8 @@ export default {
     dragPlace: null,
     taskListTitle: '',
     taskRefs: [],
-    dragPlaceOld: null
+    dragPlaceOld: null,
+    areas: []
   }),
   mounted() {
     this.taskListTitle = this.titles[this.taskList]
@@ -132,9 +133,6 @@ export default {
       })
 
       if (e.target.hasAttribute('data-task-list')) {
-        // document.querySelectorAll('.dropzone').forEach((el) => {
-        //   el.style.display = 'none'
-        // })
         document.querySelectorAll('.tasks')[+e.target.dataset.taskList].querySelector('.dropzone')
           .style.display = 'block'
       }
@@ -143,12 +141,15 @@ export default {
       document.querySelectorAll('.dropzone').forEach((el) => {
         el.style.display = 'none'
       })
+      document.querySelectorAll('.task-block').forEach(el => {
+        el.style.cssText = 'margin-top: 24px;'
+      })
     },
     drop(e) {
       this.tasks[+e.target.dataset.taskList].splice(this.dragPlace, 0, this.tasks[this.nowDrag.list][this.nowDrag.idx])
 
       if (+e.target.dataset.taskList === this.nowDrag.list) {
-        if (this.nowDrag.idx > this.dragPlace) {
+        if (this.nowDrag.idx >= this.dragPlace) {
           this.tasks[this.nowDrag.list].splice(this.nowDrag.idx + 1, 1)
         } else if (this.nowDrag.idx < this.dragPlace) {
           this.tasks[this.nowDrag.list].splice(this.nowDrag.idx, 1)
@@ -168,68 +169,75 @@ export default {
       })
     },
     dragOver(e) {
+
+
+
+      // this.taskRefs.filter(el => el!==null)
       const between = 88,
-        betweenFirst = 44,
+        betweenFirst = 56,
         bigBetween = 176,
         bigBetweenFirst = 132
 
-      const startWith = 204
+      const startWith = 192
       const cordY = e.clientY
 
       let area = startWith
-      const areas = [area]
+      this.areas = [startWith]
+
+      if (this.taskRefs[this.taskRefs.length - 1] === null) {
+        this.taskRefs.splice(-1, 1)
+      }
+
+      if (this.dragPlace === this.tasks[this.taskList].length && this.dragPlaceOld === 0) {
+        this.taskRefs[0].style.cssText = 'margin-top: 24;'
+      }
 
       if (this.dragPlace) {
         for (let i = 0; i < this.tasks[this.taskList].length; i++) {
+          if (this.dragPlace  === this.tasks[this.taskList].length) this.dragPlace = 0
+          // console.log('DragPlace in for :', this.dragPlace)
           if (this.dragPlace === i && i === 0) {
             area += bigBetweenFirst
-            areas.push(area)
+            this.areas.push(area)
+            // console.log('Zero Drag Place')
           } else if (this.dragPlace === i) {
             area += bigBetween
-            areas.push(area)
-          }
-          else if(i === 0){
+            this.areas.push(area)
+          } else if (i === 0) {
             area += betweenFirst
-            areas.push(area)
+            this.areas.push(area)
           } else {
             area += between
-            areas.push(area)
+            this.areas.push(area)
           }
+
+
         }
       }
 
-      this.dragPlace = this.tasks[this.taskList].length
-      if (cordY < startWith + 44) {
-        this.dragPlace = 0
-      } else {
+      if (cordY > this.areas[this.areas.length - 1]) this.dragPlace = this.tasks[this.taskList].length
+      else {
+
         for (let i = 0; i < this.tasks[this.taskList].length; i++) {
-          if (cordY > startWith + 44 + between * i && cordY < startWith + 44 + between * (i + 1)) {
-            this.dragPlace = (i + 1)
+          if (cordY >= this.areas[i] && cordY <= this.areas[i + 1]) {
+            this.dragPlace = i
             break
           }
         }
       }
-      for (let i = 0; i < this.tasks[this.taskList].length; i++) {
-        if(cordY >= areas[i] && cordY <= areas[i+1]) {
-          this.dragPlace = i
-        }
-      }
 
 
-
-      if (this.dragPlace !== this.dragPlaceOld && this.dragPlaceOld) {
+      if (this.dragPlaceOld) {
         this.taskRefs[this.dragPlaceOld].style.cssText = 'margin-top: 24px;'
-        this.dragPlaceOld = this.dragPlace
-      } else if (this.dragPlace !== this.tasks[this.taskList].length) {
+      }if (this.dragPlace < this.tasks[this.taskList].length){
         this.taskRefs[this.dragPlace].style.cssText = 'margin-top: 112px;'
+        this.dragPlaceOld = this.dragPlace
+
       }
 
-      this.taskRefs.forEach(el => {
-        el.style.cssText = 'margin-top: 24px;'
-      })
-      if (this.dragPlace !== this.tasks[this.taskList].length) {
-        this.taskRefs[this.dragPlace].style.cssText =  'margin-top: 112px;'
-      }
+      console.log('Drag Place : ', this.dragPlace)
+      console.log('Drag Old : ', this.dragPlaceOld)
+      // console.log('Areas : ', this.areas)
     }
     ,
     saveTaskEdit(obj) {
